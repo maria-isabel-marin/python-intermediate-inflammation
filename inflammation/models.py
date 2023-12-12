@@ -50,3 +50,57 @@ def patient_normalise(data):
     normalised[np.isnan(normalised)] = 0
     normalised[normalised < 0] = 0
     return normalised
+
+
+def daily_above_threshold(patient_num, data, threshold):
+    """Determine whether or not each daily inflammation value exceeds a given threshold for a given patient.
+
+    :param patient_num: The patient row number
+    :param data: A 2D data array with inflammation data
+    :param threshold: An inflammation threshold to check each daily value against
+    :returns: A boolean list representing whether or not each patient's daily inflammation exceeded the threshold
+    """
+
+    return list(map(lambda x: x > threshold, data[patient_num]))
+
+
+class Observation:
+    def __init__(self, day, value):
+        self.day = day
+        self.value = value
+
+    def __str__(self):
+        return self.value
+
+
+class Person:
+    def __init__(self, name):
+        self.name = name
+
+    def __str__(self):
+        return self.name
+
+
+class Patient(Person):
+    """A patient in an inflammation study."""
+    def __init__(self, name, observations=None):
+        super().__init__(name)
+
+        self.observations = []
+        ### MODIFIED START ###
+        if observations is not None:
+            self.observations = observations
+        ### MODIFIED END ###
+
+    def add_observation(self, value, day=None):
+        if day is None:
+            try:
+                day = self.observations[-1].day + 1
+
+            except IndexError:
+                day = 0
+
+        new_observation = Observation(day, value)
+
+        self.observations.append(new_observation)
+        return new_observation
