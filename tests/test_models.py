@@ -31,30 +31,6 @@ def test_daily_mean_integers():
     npt.assert_array_equal(daily_mean(test_input), test_result)
 
 
-def test_daily_max():
-    """Test that max function works for an array of positive integers."""
-    from inflammation.models import daily_max
-
-    test_input = np.array([[4, 2, 5],
-                           [1, 6, 2],
-                           [4, 1, 9]])
-    test_result = np.array([4, 6, 9])
-
-    npt.assert_array_equal(daily_max(test_input), test_result)
-
-
-def test_daily_min():
-    """Test that min function works for an array of positive and negative integers."""
-    from inflammation.models import daily_min
-
-    test_input = np.array([[4, -2, 5],
-                           [1, -6, 2],
-                           [-4, -1, 9]])
-    test_result = np.array([-4, -6, 2])
-
-    npt.assert_array_equal(daily_min(test_input), test_result)
-
-
 def test_daily_min_string():
     """Test for TypeError when passing strings"""
     from inflammation.models import daily_min
@@ -99,6 +75,19 @@ def test_daily_min(test, expected):
     """Test min function works for zeroes, positive integers, mix of positive/negative integers."""
     from inflammation.models import daily_min
     npt.assert_array_equal(daily_min(np.array(test)), np.array(expected))
+
+
+@pytest.mark.parametrize(
+    "test, expected",
+    [
+        ([[0, 0, 0], [0, 0, 0], [0, 0, 0]], [0, 0, 0]),
+        ([[4, 2, 5], [1, 6, 2], [4, 1, 9]], [1.414214, 2.160247, 2.867442]),
+        ([[4, -2, 5], [1, -6, 2], [-4, -1, 9]], [3.299832, 2.160247, 2.867442]),
+    ])
+def test_daily_std(test, expected):
+    """Test std function works for zeroes, positive integers, mix of positive/negative integers."""
+    from inflammation.models import daily_std
+    npt.assert_allclose(daily_std(np.array(test)), np.array(expected), rtol=1e-6, atol=1e-6)
 
 
 @pytest.mark.parametrize(
